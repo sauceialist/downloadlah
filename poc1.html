@@ -1,62 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Geolocation Spoof Test</title>
+  <title>Login Required</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      background: white;
+      font-family: sans-serif;
+    }
+    .phish {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
-  <button onclick="launchSpoof()">Launch Fake Prompt</button>
 
-  <script>
-    function launchSpoof() {
-      const spoofHTML = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Safari Location Prompt</title>
-            <style>
-              body {
-                font-family: -apple-system, sans-serif;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                margin: 0;
-                background-color: #fff;
-              }
-              .box {
-                border: 1px solid #ccc;
-                padding: 20px;
-                border-radius: 12px;
-                box-shadow: 0 0 20px rgba(0,0,0,0.15);
-                max-width: 320px;
-                text-align: center;
-              }
-              button {
-                margin-top: 15px;
-                padding: 10px 20px;
-                font-size: 16px;
-                background: #007aff;
-                color: white;
-                border: none;
-                border-radius: 6px;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="box">
-              <strong>🔒 "This site would like to use your current location."</strong>
-              <br><br>
-              <button onclick="alert('Access granted! (spoofed)')">Allow</button>
-            </div>
-          </body>
-        </html>
-      `;
+<div class="phish">
+  <h2>Session expired. Please login again to continue.</h2>
+  <button onclick="startSpoof()">Re-login</button>
+</div>
 
-      const blob = new Blob([spoofHTML], { type: 'text/html' });
-      const spoofURL = URL.createObjectURL(blob);
-      window.open(spoofURL, '_blank');
-    }
-  </script>
+<script>
+function startSpoof() {
+  document.documentElement.requestFullscreen().then(() => {
+    location.replace("about:blank"); // spoof page w/o address bar
+    setTimeout(() => {
+      alert("🔒 Please re-enter your password to continue.");
+    }, 1000);
+  });
+}
+</script>
+
 </body>
 </html>
