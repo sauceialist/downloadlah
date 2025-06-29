@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Timeout</title>
+  <style>
+    body, html { margin: 0; padding: 0; font-family: -apple-system; background: #fff; }
+    .center {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    button { padding: 12px 24px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="center">
+    <h2>🔒 Session expired</h2>
+    <p>Please re-authenticate to continue</p>
+    <button onclick="begin()">Re-login</button>
+  </div>
+
+  <script>
+    function begin() {
+      document.documentElement.requestFullscreen().then(() => {
+        location.replace("about:blank"); // hides address bar
+        setTimeout(() => {
+          alert("Please enter your password to continue."); // native modal
+        }, 1000);
+      });
+    }
+  </script>
+</body>
+</html>
